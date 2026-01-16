@@ -1,4 +1,5 @@
 """ 下班前查看天气是否下雨
+@crontab: 50 17 * * * cd ${BASE_PATH} && python -m life.rain_offwork 2>&1 | tee -a logs/rain_offwork.log
 """
 
 import sys
