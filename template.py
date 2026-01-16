@@ -4,11 +4,13 @@
 
 from dotenv import dotenv_values
 from pyutils.notify_util import Feishu, Pushme
+from pyutils.date_util import now
 
 
 
 if __name__ == '__main__':
     cfg = dotenv_values()
+    print(f'\n\n\n=============== {now()} ===============')
 
     # TODO
     title, content = 'title', 'test...'
