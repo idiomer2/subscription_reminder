@@ -12,6 +12,7 @@ import requests
 import easyquotation
 
 from pyutils.notify_util import Feishu, Pushme
+from pyutils.date_util import now
 
 
 def add_color(txt):
@@ -69,7 +70,8 @@ def get_kjtl_data():
     return data_json
 
 if __name__ == '__main__' and not today_is_holiday():
-    args = dotenv_values()
+    cfg = dotenv_values()
+    print(f'\n\n\n=============== {now()} ===============')
 
     quotation = easyquotation.use('qq')
     data = quotation.stocks(['sh000300', 'sh000905', 'sh000922', 'sh000919', 'sz399986', 'sz399975', 'sh512480', 'sh515790'], prefix=True)
@@ -112,7 +114,7 @@ if __name__ == '__main__' and not today_is_holiday():
     }
 
     try:
-        Feishu(args['FEISHU_WEBHOOK_TOKEN']).send_markdown_interactive(**card_msg)
+        Feishu(cfg['FEISHU_WEBHOOK_TOKEN']).send_markdown_interactive(**card_msg)
     finally:
-        Pushme(args['PUSHME_PUSH_KEY']).send_markdown('[#指数播报!指]'+card_msg['title'], card_msg['markdown_content'].replace('\n', '\n\n'))
+        Pushme(cfg['PUSHME_PUSH_KEY']).send_markdown('[#指数播报!指]'+card_msg['title'], card_msg['markdown_content'].replace('\n', '\n\n'))
 
