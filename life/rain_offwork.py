@@ -9,6 +9,7 @@ from datetime import datetime
 import requests
 from dotenv import dotenv_values
 from pyutils.notify_util import Feishu, Pushme
+from pyutils.date_util import now
 
 
 def get_huangpu_weather():
@@ -96,6 +97,7 @@ def analyze_rain(code, rain_mm):
 
 if __name__ == '__main__':
     cfg = dotenv_values()
+    print(f'\n\n\n=============== {now()} ===============')
 
     result = get_huangpu_weather()
     if result is None:  # 接口调用失败
