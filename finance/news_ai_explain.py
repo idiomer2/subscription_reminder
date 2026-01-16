@@ -51,7 +51,7 @@ if __name__ == '__main__':
     LivesList = data['LivesList']; print(f'len(LivesList) = {len(LivesList)}')
 
     filter_LivesList = [{key:one[key] for key in ('showtime','title','digest')} for one in LivesList if start_time<=one['showtime']<end_time]  # url_unique
-    news_json = json.dumps(filter_LivesList, ensure_ascii=False, separators=(',',':'));print(news_json)  # 紧密输出
+    news_json = json.dumps(filter_LivesList, ensure_ascii=False, separators=(',',':')); # print(news_json)  # 紧密输出
     real_start, real_end = min([x['showtime'] for x in filter_LivesList]), max([x['showtime'] for x in filter_LivesList])
 
 
