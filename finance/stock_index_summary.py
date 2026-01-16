@@ -1,9 +1,11 @@
 """ 指数播报
-@crontab: 45 14 * * 1-5 cd ${BASE_PATH} && python stock_index_summary.py 2>&1 | tee -a logs/stock_index_summary.log
+@crontab: 45 14 * * 1-5 cd ${BASE_PATH} && python -m finance.stock_index_summary.py 2>&1 | tee -a logs/stock_index_summary.log
 """
 
 import time
 import sys
+import json
+import base64
 from dotenv import dotenv_values
 
 import requests
@@ -41,7 +43,6 @@ def today_is_holiday():
 def new_my_decode(data):
     from Crypto.Cipher import AES
     from Crypto.Util.Padding import unpad
-    import base64
     key = b'bieyanjiulexixishuibatoufameill1'[:32]  # 密钥需要是32字节
     iv = b'nengnongchulainbl1'[:16]  # 向量通常是16字节
     encrypted_data = base64.b64decode(data)     # 解码 Base64 数据
@@ -54,7 +55,6 @@ def new_my_decode(data):
     return decrypted.decode('utf-8')
 
 def get_kjtl_data():
-    import json
     url = "https://api.jiucaishuo.com/v2/kjtl/kjtlconnect"
     payload = {
         "gu_code": '000001.SH',  # 000300.SH

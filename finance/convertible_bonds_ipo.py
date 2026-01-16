@@ -1,6 +1,6 @@
 # coding: utf-8
 ''' 可转债打新提醒
-@crontab: 30 09 * * * cd ${BASE_PATH} && python convertible_bonds_ipo.py 2>&1 | tee -a logs/convertible_bonds_ipo.log
+@crontab: 30 09 * * * cd ${BASE_PATH} && python -m finance.convertible_bonds_ipo.py 2>&1 | tee -a logs/convertible_bonds_ipo.log
 '''
 
 import json
