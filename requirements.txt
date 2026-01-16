@@ -1,4 +1,4 @@
-requests
-python-dotenv
-easyquotation
-
+requests==2.32.3
+python-dotenv==1.2.1
+easyquotation==0.7.7
+pycryptodome==3.23.0
