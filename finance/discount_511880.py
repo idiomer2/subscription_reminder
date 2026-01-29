@@ -1,4 +1,5 @@
 """
+脚本逻辑：
 0. 判断今天(Asia/Shanghai)是否是交易日和交易时间。若是则执行下面步骤，否则直接结束
 1. 获取最新净值和日期
 2. 计算历史净值增长的中位数做为1天的预估增长值
@@ -7,6 +8,9 @@
     - 获取最新场内价格和时间
     - 计算当前价格相对下次预估净值的折价
     - 若折价大于万分之0.5（可配置），print告警；否则打印普通信息
+
+日志查看：
+grep -E '最新净值:|下次预估净值:' logs/discount_511880.log
 """
 import json
 import re
@@ -403,6 +407,7 @@ class FundMonitor:
         print("-" * 50)
 
         try:
+            last_alert_discount = 0
             while True:
                 # 获取当前时间
                 now = datetime.now(ZoneInfo('Asia/Shanghai'))
@@ -440,7 +445,8 @@ class FundMonitor:
                     discount_str = f"{discount*10000:.2f}"
 
                     # 判断是否告警
-                    if discount > CONFIG['WARNING_DISCOUNT']:
+                    if discount >= CONFIG['WARNING_DISCOUNT'] and discount > last_alert_discount:
+                        last_alert_discount = discount
                         # 红色警告（在支持ANSI颜色的终端显示）
                         print(f"\033[91m{time_str} - 警告! 价格: {price_str}, 预估净值: {nav_str}, 折价: {discount_str}‱\033[0m")
                         title, content = '银华折价', f'- 昨晚最新净值: {latest_nav_str} ({self.latest_nav_date})\n\n- 今晚预估净值: {nav_str} ({self.next_estimated_date})\n\n- 实时价格: {price_str} ({time_str})\n\n-场内折价: {discount_str}‱  '
