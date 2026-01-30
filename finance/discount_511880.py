@@ -281,45 +281,20 @@ class FundMonitor:
             if is_trading:
                 return current_date
 
-    def calculate_days_until_next_update(self, current_date: datetime) -> int:
+    def calculate_next_update_earndays(self, current_date: datetime) -> int:
         """
-        计算距离下次净值更新的天数
+        计算下次净值更新的天数
         规则：
         - 周一到周四：更新1天收益，下个交易日
         - 周五：更新3天收益（周六、周日、下周一）
         - 节假日前一天：更新包含假期的所有天数收益
         """
-        weekday = current_date.weekday()
-
-        # 如果是周五
-        if weekday == 4:  # 4表示周五
-            # 获取下周一
-            next_date = current_date + timedelta(days=3)  # 周五+3天=周一
-            # 检查下周一是否是交易日
-            is_trading, _ = self.is_trading_day(next_date)
-            if not is_trading:
-                # 如果不是交易日，继续找下一个交易日
-                return 3 + sum(1 for _ in range(10) if not self.is_trading_day(next_date + timedelta(days=_))[0])
-            return 3
-
-        # 如果不是周五，一般是1天
-        # 但需要检查是否是节假日前一天
-        next_date = current_date + timedelta(days=1)
-        is_trading, reason = self.is_trading_day(next_date)
-
-        if not is_trading:
-            # 如果不是交易日，说明是节假日前一天
-            # 计算连续非交易日的天数
-            holiday_days = 1
-            while True:
-                check_date = current_date + timedelta(days=holiday_days + 1)
-                is_trading_next, _ = self.is_trading_day(check_date)
-                if is_trading_next:
-                    break
-                holiday_days += 1
-            return holiday_days
-
-        return 1
+        next_date = current_date  # 下次净值更新时间，也就是今日
+        days = 1
+        while not self.is_trading_day(next_date + timedelta(1))[0]:
+            days += 1
+            next_date = next_date + timedelta(1)
+        return days
 
     def fetch_latest_nav(self) -> bool:
         """
@@ -372,29 +347,16 @@ class FundMonitor:
             dt_time.min
         ).replace(tzinfo=ZoneInfo('Asia/Shanghai'))
 
-        # 计算距离下次更新的天数
-        days_until_update = self.calculate_days_until_next_update(latest_date)
+        # 计算下次净值更新的日期和收益天数
+        self.next_estimated_date = self.get_next_trading_date(latest_date)
+        next_update_earndays = self.calculate_next_update_earndays(self.next_estimated_date)
 
         # 计算下次预估净值
-        self.next_estimated_nav = self.latest_nav + (self.estimated_growth * days_until_update)
-
-        # 计算下次预估日期
-        if days_until_update == 1:
-            self.next_estimated_date = latest_date + timedelta(days=1)
-        else:
-            # 对于多天的情况，需要找到确切的交易日
-            days_counted = 0
-            current_date = latest_date
-            while days_counted < days_until_update:
-                current_date += timedelta(days=1)
-                is_trading, _ = self.is_trading_day(current_date)
-                if is_trading:
-                    days_counted += 1
-            self.next_estimated_date = current_date
+        self.next_estimated_nav = self.latest_nav + (self.estimated_growth * next_update_earndays)
 
         print(f"下次预估日期: {self.next_estimated_date.strftime('%Y-%m-%d')}")
         print(f"下次预估净值: {self.next_estimated_nav:.4f}")
-        print(f"预估增长天数: {days_until_update}天")
+        print(f"预估收益天数: {next_update_earndays}天")
 
         return True
 
