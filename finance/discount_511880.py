@@ -405,13 +405,14 @@ class FundMonitor:
                     nav_str = f"{self.next_estimated_nav:.4f}"
                     price_str = f"{current_price:.4f}"
                     discount_str = f"{discount*10000:.2f}"
+                    annual_interest_rate_str = f"{discount*365*100:.2f}"
 
                     # 判断是否告警
                     if discount >= CONFIG['WARNING_DISCOUNT'] and discount > last_alert_discount:
                         last_alert_discount = discount
                         # 红色警告（在支持ANSI颜色的终端显示）
                         print(f"\033[91m{time_str} - 警告! 价格: {price_str}, 预估净值: {nav_str}(<-{latest_nav_str}), ✔ 折价: {discount_str}‱\033[0m")
-                        title, content = '银华折价', f'- 昨晚最新净值: {latest_nav_str} ({self.latest_nav_date})\n\n- 今晚预估净值: {nav_str} ({self.next_estimated_date})\n\n- 场内实时价格: {price_str} ({time_str})\n\n- 场内折价: {discount_str}‱  '
+                        title, content = '银华折价', f'- 昨晚最新净值: {latest_nav_str} ({self.latest_nav_date})\n\n- 今晚预估净值: {nav_str} ({self.next_estimated_date})\n\n- 场内实时价格: {price_str} ({time_str})\n\n- 场内折价: {discount_str}‱   (单利年化:{annual_interest_rate_str}%)'
                         try:
                             Feishu(cfg['FEISHU_WEBHOOK_TOKEN']).send_markdown(title, content)
                         finally:
