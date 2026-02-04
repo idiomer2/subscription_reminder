@@ -25,12 +25,13 @@ import requests
 from dotenv import dotenv_values
 
 from pyutils.date_util import stamp2time, stamp2str, now
-from pyutils.notify_util import Feishu, Pushme
+from pyutils.notify_util import Feishu, Pushme, Bark
 
 
 # 配置参数
 CONFIG = {
     'WARNING_DISCOUNT': 0.5 / 10000,  # 万分之0.5的折价
+    'WARNING_DISCOUNT2': 1.0 / 10000, # 万分之1的折价
     'CHECK_INTERVAL': 30,  # 检查间隔30秒
     'TRADING_HOURS': {
         'morning_start': dt_time(9, 30),
@@ -418,6 +419,8 @@ class FundMonitor:
                         finally:
                             cate, icon = '套利', '😀'
                             Pushme(cfg['PUSHME_PUSH_KEY']).send_markdown(f'[#{cate}!{icon}]'+title, content)
+                            if discount >= CONFIG['WARNING_DISCOUNT2']:
+                                Bark(cfg['BARK_TOKEN']).send(content, title)
                     else:
                         # 普通信息
                         print(f"{time_str} - 价格: {price_str}, 预估净值: {nav_str}(<-{latest_nav_str}), 折价: {discount_str}‱")
