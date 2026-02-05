@@ -1,5 +1,7 @@
-#! /usr/bin/env python
+"""
 # systemctl restart gznhg.service && journalctl -u gznhg.service -f -a
+@crontab: 30 09 * * 1-5 cd $reminder_home && $PYTHON -u -m finance.gznhg.py 2>&1 | tee -a logs/gznhg.log
+"""
 import requests
 import time
 import datetime
