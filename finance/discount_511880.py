@@ -32,7 +32,7 @@ from pyutils.notify_util import Feishu, Pushme, Bark
 CONFIG = {
     'WARNING_DISCOUNT': 0.5 / 10000,  # 万分之0.5的折价
     'WARNING_DISCOUNT2': 1.0 / 10000, # 万分之1的折价
-    'CHECK_INTERVAL': 30,  # 检查间隔30秒
+    'CHECK_INTERVAL': 60,  # 检查间隔30秒
     'TRADING_HOURS': {
         'morning_start': dt_time(9, 30),
         'morning_end': dt_time(11, 30),
