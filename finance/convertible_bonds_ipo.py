@@ -9,7 +9,7 @@ import time
 from dotenv import dotenv_values
 
 import requests
-from pyutils.notify_util import Feishu, Pushme
+from pyutils.notify_util import Feishu, Pushme, Bark
 from pyutils.date_util import now
 
 
@@ -37,3 +37,4 @@ if __name__ == '__main__':
             pushme = Pushme(cfg['PUSHME_PUSH_KEY'])
             pushme.send_markdown('[#打新!🎲📈]'+card_msg['title'], card_msg['msg'])
 
+            Bark(cfg['BARK_TOKEN']).send(card_msg['msg'], card_msg['title'])
