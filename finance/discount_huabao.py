@@ -127,7 +127,7 @@ class HuaBaoMonitor:
 
         tonight_nav_estimated = 100.0029
         alerted_price = float('inf')
-        while '09:30' <= now_time().strftime('%H:%M') < '15:00':
+        while '09:25' <= now_time().strftime('%H:%M') < '15:00':
             price_rt = fetch_realtime_price(self.fund_code)['price']
             discount = tonight_nav_estimated - price_rt
             if price_rt < self.low_price and price_rt < alerted_price:

@@ -6,6 +6,7 @@ reminder_home=/root/subscription_reminder
 30 09 * * 1-5 cd $reminder_home && $PYTHON -u -m finance.gznhg.py 2>&1 | tee -a logs/gznhg.log
 30 12 * * 1-5 cd $reminder_home && $PYTHON -u -m finance.lof_discount 2>&1 | tee -a logs/lof_discount.log
 45 14 * * 1-5 cd $reminder_home && $PYTHON -u -m finance.stock_index_summary 2>&1 | tee -a logs/stock_index_summary.log
-40 11 * * 1-5 cd $reminder_home && $PYTHON -u -m finance.discount_511880 2>&1 | tee -a logs/discount_511880.log
+25 09 * * 1-5 cd $reminder_home && $PYTHON -u -m finance.discount_511880 2>&1 | tee -a logs/discount_511880.log
+25 09 * * 1-5 cd $reminder_home && $PYTHON -u -m finance.discount_huabao 2>&1 | tee -a logs/discount_huabao.log
 50 17 * * 1-5 cd $reminder_home && $PYTHON -u -m life.rain_offwork 2>&1 | tee -a logs/rain_offwork.log
 
