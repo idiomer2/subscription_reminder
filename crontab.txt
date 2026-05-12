@@ -1,5 +1,5 @@
 PYTHON=/root/.conda/bin/python
-reminder_home=/root/subscription_reminder
+reminder_home=/root/apps/github/subscription_reminder
 
 00,30 * * * * cd $reminder_home && $PYTHON -u -m finance.news_ai_explain onlytimes 2>&1 | tee -a logs/news_ai_explain.log
 30 09 * * 1-5 cd $reminder_home && $PYTHON -u -m finance.convertible_bonds_ipo 2>&1 | tee -a logs/convertible_bonds_ipo.log
